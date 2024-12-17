@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
+import responseHandler from "../utils/responseHandler.js";
 
 const authController = {
   test: (req, res) => {
@@ -14,11 +15,9 @@ const authController = {
       const hashedPassword = bcrypt.hashSync(password, 10);
 
       const user = await User.create({ name, email, password: hashedPassword });
-      res
-        .status(201)
-        .json({ message: "User created successfully", data: user });
+      return responseHandler(res, 200, user, null);
     } catch (error) {
-      res.status(500).json({ message: "Error creating user", error });
+      return responseHandler(res, 400, { message: "Cannot signup user" }, null);
     }
   },
 };
